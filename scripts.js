@@ -1,6 +1,6 @@
-alert("Script loaded")
 
-var _data_total = [
+// A default set of data for the New button
+var _data_default = [
 {
 	"cat_name" : "Empty",
 	"cat_data" : [
@@ -10,9 +10,18 @@ var _data_total = [
 			"description" : "Root node",
 			"children" : [],
 			"color" : "white"
+		},
+		{
+			"name" : "Empty",
+			"parents" : ["_root"],
+			"description" : "Wololo",
+			"children" : [],
+			"color" : "white"
 		}
 	]
 }];
+
+var _data_total = _data_default.slice();
 
 var _index_category = 0;
 
@@ -22,55 +31,10 @@ var _data_category = _data_total[_index_category].cat_data
 
 var _data_element = _data_category[_index_element]
 
-
-var _tree_category = []
-
+fillChildren();
 
 
-
-function test_javascript()
-{
-	alert("This is an alert message command");
-	var paragraph = document.getElementById("test_paragraph");
-	paragraph.innerHTML = "Wohoho";
-}
-
-function download(filename, text) {
-	var element = document.createElement('a');
-	element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text));
-	element.setAttribute('download', filename);
-	element.style.display = 'none';
-	document.body.appendChild(element);
-	element.click();
-	document.body.removeChild(element);
-}
-
-function loadFileAsText()
-{
-	var fileToLoad = document.getElementById("fileUploadSelect").files[0];
-
-	var fileReader = new FileReader();
-	fileReader.onload = function(fileLoadedEvent){
-		var textFromFileLoaded = fileLoadedEvent.target.result;
-		// document.getElementById("object_desc").value = textFromFileLoaded;
-		_data_total = JSON.parse(textFromFileLoaded);
-		//document.getElementById("object_desc").value = _data_total[1].cat_name;
-		for(var i = 0; i<_data_total.length; i++)
-		{
-			fillChildren(i);
-		}
-		reload();
-	};
-
-	fileReader.readAsText(fileToLoad, "UTF-8");
-}
-
-function saveData()
-{
-	var s = JSON.stringify( _data_total )
-	download("test.json", s)
-}
-
+// Function to generate some sample data
 function generateData() {
 	var data_obj = {
 		"name" : "Nie Yan",
@@ -170,20 +134,59 @@ function generateData() {
 	download("test.json", s)
 }
 
-// Fill in the information about child nodes using the parents information
-function fillChildren(cat_index_)
+
+function download(filename, text) {
+	var element = document.createElement('a');
+	element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text));
+	element.setAttribute('download', filename);
+	element.style.display = 'none';
+	document.body.appendChild(element);
+	element.click();
+	document.body.removeChild(element);
+}
+
+function loadFileAsText()
 {
-	for (ele_ind1 in _data_total[cat_index_].cat_data)
+	var fileToLoad = document.getElementById("fileUploadSelect").files[0];
+
+	var fileReader = new FileReader();
+	fileReader.onload = function(fileLoadedEvent){
+		var textFromFileLoaded = fileLoadedEvent.target.result;
+		// document.getElementById("object_desc").value = textFromFileLoaded;
+		_data_total = JSON.parse(textFromFileLoaded);
+		//document.getElementById("object_desc").value = _data_total[1].cat_name;
+		fillChildren();
+		reload();
+	};
+
+	fileReader.readAsText(fileToLoad, "UTF-8");
+}
+
+function saveData()
+{
+	var s = JSON.stringify( _data_total )
+	download("test.json", s)
+}
+
+
+
+// Fill in the information about child nodes using the parents information
+function fillChildren()
+{
+	for(var cat_index_ = 0; cat_index_ < _data_total.length; cat_index_++)
 	{
-		var element1 = _data_total[cat_index_].cat_data[ele_ind1];
-		element1.children = []; // Empty the children array
-		// Find the elements that have element1 as a parent
-		for (ele_ind2 in _data_total[cat_index_].cat_data)
+		for (ele_ind1 in _data_total[cat_index_].cat_data)
 		{
-			var element2 = _data_total[cat_index_].cat_data[ele_ind2];
-			if (element2.parents.findIndex(function(parent){return parent==element1.name}) != -1)
+			var element1 = _data_total[cat_index_].cat_data[ele_ind1];
+			element1.children = []; // Empty the children array
+			// Find the elements that have element1 as a parent
+			for (ele_ind2 in _data_total[cat_index_].cat_data)
 			{
-				element1.children.push(element2.name);
+				var element2 = _data_total[cat_index_].cat_data[ele_ind2];
+				if (element2.parents.findIndex(function(parent){return parent==element1.name}) != -1)
+				{
+					element1.children.push(element2.name);
+				}
 			}
 		}
 	}
@@ -211,9 +214,6 @@ function recursiveHeirarchy(local_tree)
 	for (node_ind in local_tree.children)
 	{
 		node = local_tree.children[node_ind];
-		// The link should read : onClick='objectSelected("Nie Yan")'
-		// console.log("<li> <a class='heir_element' href=# + onClick='objectSelected(\"" + node.name "\")'>");
-		// html = html + "<li> <a class='heir_element' href=# + onClick='objectSelected(\"" + node.name "\")'>" + node.name + "</a>";
 		html = html + "<li> <a class='heir_element' href=# id='heir_id" + node.name + "' onClick='objectSelected(this.id)' >" + node.name + "</a>";
 		html = html + recursiveHeirarchy(node);
 		html = html + "</li> \n";
@@ -224,7 +224,6 @@ function recursiveHeirarchy(local_tree)
 
 function objectSelected(object_id)
 {
-	console.log(object_id.substring(7))
 	object_name = object_id.substring(7)
 	_index_element = _data_category.findIndex( function(element){return object_name==element.name});
 	reload();
@@ -243,14 +242,56 @@ function reload() {
 	document.getElementById('object_name').value = _data_element.name;
 	document.getElementById('object_parents').value = _data_element.parents;
 	document.getElementById('object_desc').value = _data_element.description;
-	
+}
 
-	// data1 = [34,45,66,78]
-	// data2 = data1.slice()
-	// //data2.reverse()
-	// //data2[3] = 99
-	// data2.splice(1,0,125)
-	// data3 = data2.findIndex(function(elem){return elem==45})
-	// document.getElementById('object_desc').value = data1 + "\n" + data2 + "\n" + data3
-	// document.getElementById("object_desc").value = "Hello World";
+function clickUpdate()
+{
+	// Collect form data
+	var newname = document.getElementById('object_name').value;
+	var newparents = document.getElementById('object_parents').value;
+	var newdesc = document.getElementById('object_desc').value;
+	//var newcolor = 
+
+	// Check if name has been changed
+	if (newname != _data_element.name)
+	{
+		//TODO - Process the new name variants, check if name collision, update all old references to this name
+		// Check if there is a name collision
+		if ( _data_category.findIndex(function(elem){return elem.name==newname}) != -1 )
+		{
+			alert("ERROR: There is a name collision. Please select a new name.");
+			return;
+		}
+	}
+
+	// Process and verify the parents data
+	parents_data = newparents.split(","); // Split the parents using commas
+	for (parents_index in parents_data)
+	{
+		parent = parents_data[parents_index];
+		if ( _data_category.findIndex(function(elem){return elem.name==parent}) == -1)
+		{
+			alert("ERROR: Could not find the parent named '" + parent + "'");
+			return;
+		}
+	}
+
+
+	// Update all old references to this name
+	for (ele_index in _data_category)
+	{
+		var element = _data_category[ele_index];
+		var change_index = element.parents.findIndex(function(parent){return parent==_data_element.name})
+		if (change_index != -1)
+		{
+			element.parents[change_index] = newname;
+		}
+	}
+
+	// Update the element if nothing else is wrong
+	_data_element.name = newname;
+	_data_element.parents = parents_data;
+	_data_element.description = newdesc;
+	fillChildren();
+	reload();
 }
