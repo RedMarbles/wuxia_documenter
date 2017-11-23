@@ -224,8 +224,9 @@ function recursiveHeirarchy(local_tree)
 
 function objectSelected(object_id)
 {
-	object_name = object_id.substring(7)
+	var object_name = object_id.substring(7)
 	_index_element = _data_category.findIndex( function(element){return object_name==element.name});
+	_data_element = _data_category[_index_element];
 	reload();
 }
 
@@ -251,6 +252,12 @@ function clickUpdate()
 	var newparents = document.getElementById('object_parents').value;
 	var newdesc = document.getElementById('object_desc').value;
 	//var newcolor = 
+
+	if(_data_element.name == "_root")
+	{
+		alert("ERROR: Cannot change parameters of the root element");
+		return;
+	}
 
 	// Check if name has been changed
 	if (newname != _data_element.name)
@@ -292,6 +299,58 @@ function clickUpdate()
 	_data_element.name = newname;
 	_data_element.parents = parents_data;
 	_data_element.description = newdesc;
+	fillChildren();
+	reload();
+}
+
+
+function clickAddObject()
+{
+	var randomname = "NewObject#"+Math.floor(Math.random() * 9934925);
+	var newelement = {
+		"name" : randomname,
+		"parents" : [_data_element.name], // Add the new element as a child of the current element
+		"description" : "",
+		"children" : [],
+		"color" : "white"
+	};
+	_data_category.push(newelement);
+
+	_index_element = _data_category.findIndex(function(elem){return elem.name==randomname})
+	_data_element = _data_category[_index_element]
+
+	fillChildren();
+	reload();
+}
+
+function clickDelObject()
+{
+	// TODO - Verify that the user wants to delete the entry
+
+	if (_data_element.name == "_root")
+	{
+		alert("ERROR: Cannot delete root element.");
+		return;
+	}
+
+	// Remove all references to the element in the parents lists
+	for (ele_index in _data_category)
+	{
+		var element = _data_category[ele_index];
+		var remove_index = element.parents.findIndex(function(parent){return parent==_data_element.name})
+		if (remove_index != -1)
+		{
+			element.parents.splice(remove_index,1);
+		}
+		if (element.parents.length == 0)
+		{
+			element.parents.length = ["_root"];
+		}
+	}
+
+	_data_category.splice(_index_element,1);
+	_index_element = 0;
+
 	fillChildren();
 	reload();
 }
