@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+	<meta charset="utf-8"/>
+	<meta name="viewport" content="width=device-width, initial-scale=1"/>
+	<!-- Bootstrap libraries -->
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"/>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script> 
+
+	<link rel="stylesheet" type="text/css" href="style.css"/>
+	<script type="text/javascript" src="scripts.js"></script>
+	<title> The Wuxia Documenter Project </title>
+</head>
+
+<body onLoad="reload()">
+	
+	<div class="container" id="frame_root">
+		<div class="page-header">
+			<h1 onClick='object_name="Nie Yan";objectSelected();'> The Wuxia Documenter Project </h1>
+		</div>
+
+		<div class="row" id="div_chapter_select"> 
+			<div class="col-sm-6">
+				<button type="button" class="btn" onClick="reload()"> <span class="glyphicon glyphicon-file"></span> New </button>
+				<button type="button" class="btn" onClick="saveData()"> <span class="glyphicon glyphicon-save-file"></span> Save </button>
+				<span hidden> <input type="file" id="fileUploadSelect" onchange="loadFileAsText()"> </span>
+				<button type="button" class="btn" onClick="document.getElementById('fileUploadSelect').click()"> <span class="glyphicon glyphicon-open-file"></span> Load </button>
+				<!--input type="file" id="file-input" style="visibility:hidden"/-->
+			</div>
+			<div class="col-sm-3 text-right"> <h5> Chapter: </h5> </div>
+			<div class="col-sm-3"> 
+				<select id="select_chapter">
+					<option value="Chapter1"> Chapter 1 </option>
+				</select>
+			</div>
+		</div>
+
+		<!--div class="btn-group btn-group-sm" id="tabbar"> 
+			<button type="button" class="btn btn-primary"> Character </button>
+			<button type="button" class="btn btn-primary"> Character </button>
+			<button type="button" class="btn btn-primary"> Character </button>
+			<button type="button" class="btn btn-primary"> Character </button>
+		</div-->
+
+		<ul class="nav nav-tabs nav-justified" id="tabbar">
+			<li class="active"> <a href=#> Character </a> </li>
+			<li> <a href=#> Character </a> </li>
+			<li> <a href=#> Character </a> </li>
+			<li> <a href=#> Character </a> </li>
+			<li> <a href=#> Character </a> </li>
+		</ul>
+
+		<div class="row" id="frame_primary"> 
+			<div class="col-sm-6 padding10" id="frame_heirarchy_root"> 
+				<h3> Object Heirarchy </h3>
+				<button type="button" class="btn"> Add Object <span class="glyphicon glyphicon-plus"></span> </button>
+				<button type="button" class="btn"> Del Object <span class="glyphicon glyphicon-minus"></span> </button>
+				<br/>
+				<!--div class="list-group" id="heirarchy-list" style="overflow:auto; height:100%;">
+					<a href="#" class="list-group-item heir-item active"> Character 1 </a>
+					<a href="#" class="list-group-item heir-item"> Character 1 </a>
+					<a href="#" class="list-group-item heir-item"> Character 1 </a>
+					<a href="#" class="list-group-item heir-item"> Character 1 </a>
+					<a href="#" class="list-group-item heir-item"> Character 1 </a>
+				</div-->
+				<div class="my_list" id="heirarchy" style="overflow:auto; height:300px;">
+						<li> Character 1</li>
+						<li> Character 1 <ul>
+							<li> Character 2</li>
+							<li> Character 2</li>
+						</ul></li>
+						<li> Character 1</li>
+						<li> Character 1</li>
+						<li> Character 1 <ul>
+							<li> Character 2</li>
+							<li> Character 2</li>
+						</ul></li>
+						<li> Character 1</li>
+						<li> Character 1</li>
+						<li> Character 1 <ul>
+							<li> Character 2</li>
+							<li> Character 2</li>
+						</ul></li>
+						<li> Character 1</li>
+						<li> Character 1</li>
+					</ul>
+				</div>
+			</div>
+
+
+			<div class="col-sm-6 padding10" id="frame_description_root">
+				<h3> Object Description </h3>
+				<!--button type="button" class="btn"> Update <span class="glyphicon glyphicon-ok-circle"></span> </button>
+				<button type="button" class="btn"> Diff <span class="glyphicon glyphicon-directions"></span> </button>
+				<button type="button" class="btn"> Clear <span class="glyphicon glyphicon-remove-circle"></span> </button-->
+				<form class="form-horizontal">
+					<div class="form-group">
+						<button type="submit" class="btn"> Update <span class="glyphicon glyphicon-ok-circle"></span> </button>
+						<button type="submit" class="btn"> Revert <span class="glyphicon glyphicon-remove-circle"></span> </button>
+					</div>
+					<div class="form-group">
+						<label class="control-label col-sm-2" for="object_name"> Name: </label>
+						<div class="col-sm-10">
+							<input type="text" class="form-control" id="object_name" placeholder="Object Name">
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="control-label col-sm-2" for="object_parents"> Parents: </label>
+						<div class="col-sm-10">
+							<input type="text" class="form-control" id="object_parents" placeholder="Object Parents">
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="control-label" for="object_desc"> Description: </label>
+						<textarea class="form-control" id="object_desc" rows="9" placeholder="Description" style="overlow:auto;"> </textarea>
+					</div>
+				</form>
+				<br/>
+			</div>
+
+		</div>
+	</div>
+
+</body>
+
+</html>

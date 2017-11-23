@@ -1,0 +1,52 @@
+body
+{
+	background-color: #A0A0A0;
+	font-family: sans-serif;
+}
+
+select
+{
+	width: 100%;
+}
+
+
+#tabbar
+{
+	padding-top: 10px;
+}
+
+/*.padding10
+{
+	padding: 10px;
+}
+
+.tab
+{
+	border: solid 1px;
+	background-color: #707070;
+	padding-left: 10px;
+	padding-right: 10px;
+	padding-top: 5px;
+	padding-bottom: 5px;
+}
+
+.button_and_frame
+{
+	background-color: #A0A0A0;
+	padding: 5px;
+}
+
+#heirarchy-list
+{
+	margin-top: 20px;
+}
+
+.heir-item
+{
+	background-color: #909090;
+}
+
+.table
+{
+	margin-top: 10px;
+}*/
