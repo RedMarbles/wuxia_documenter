@@ -55,6 +55,8 @@ var _data_saved = false; // Records whether the entire dataset has been saved ye
 
 var _element_saved = true; // Records whether any changes have been made to the current element
 
+var _project_name = "Untitled"; // The name of the current project
+
 fillChildren();
 
 
@@ -184,6 +186,9 @@ function loadFileAsText()
 {
 	var fileToLoad = document.getElementById("fileUploadSelect").files[0];
 
+	_project_name = fileToLoad.name;
+	_project_name = _project_name.substring(0,_project_name.length-5)
+
 	var fileReader = new FileReader();
 	fileReader.onload = function(fileLoadedEvent){
 		var textFromFileLoaded = fileLoadedEvent.target.result;
@@ -200,7 +205,7 @@ function loadFileAsText()
 function saveData()
 {
 	var s = JSON.stringify( _data_total )
-	download("test.json", s)
+	download(_project_name + ".json", s)
 	_data_saved = true;
 	reload();
 }
@@ -401,6 +406,8 @@ function reload() {
 
 	// Set up the category tabs on top
 	var tabbar = document.getElementById('tabbar').innerHTML = generateTabbar();
+
+	document.getElementById('title').innerHTML = "The Wuxia Documenter Project - "+ _project_name;
 
 	tree = []
 	tree = populateTree("_root"); // Fill the tree beginning from the root node
@@ -612,6 +619,7 @@ function clickNewButton()
 	_data_element = _data_category[_index_element];
 	_element_saved = true;
 	_data_saved = false;
+	_project_name = "Untitled";
 	fillChildren();
 	reload();
 }
