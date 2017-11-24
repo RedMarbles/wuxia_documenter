@@ -422,6 +422,17 @@ function reload() {
 	}
 }
 
+// Removes faulty characters from the string
+function sanitizeString(input)
+{
+	output = input.slice();
+	while (output.indexOf("'") != -1)
+	{
+		output = output.replace("'","");
+	}
+	return output;
+}
+
 function clickUpdate()
 {
 	// Collect form data
@@ -430,6 +441,8 @@ function clickUpdate()
 	var newdesc = document.getElementById('object_desc').value;
 	var newcolor = document.getElementById('select_color').value;
 	//var newcolor = 
+
+	newname = sanitizeString(newname);
 
 	if(_data_element.name == "_root")
 	{
@@ -453,7 +466,7 @@ function clickUpdate()
 	parents_data = newparents.split(","); // Split the parents using commas
 	for (parents_index in parents_data)
 	{
-		parent = parents_data[parents_index];
+		parent = sanitizeString( parents_data[parents_index] );
 		if ( _data_category.findIndex(function(elem){return elem.name==parent}) == -1)
 		{
 			alert("ERROR: Could not find the parent named '" + parent + "'");
