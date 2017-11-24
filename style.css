@@ -15,9 +15,52 @@ select
 	padding-top: 10px;
 }
 
-li
+.my_list
+{
+	margin-top: 5px;
+}
+
+li.heir_item
 {
 	white-space: nowrap;
+}
+
+a.heir_element
+{
+	color: black;
+	padding-right: 5px;
+	padding-left: 5px;
+	border-radius: 3px;
+}
+
+.color-white
+{
+	background-color: #bababa;
+}
+
+.color-pink
+{
+	background-color: #e678e8;
+}
+
+.color-blue
+{
+	background-color: #64bbe0;
+}
+
+.color-yellow
+{
+	background-color: #dae060;
+}
+
+.color-green
+{
+	background-color: #63d886;
+}
+
+.form-group
+{
+	margin-bottom: 2px;
 }
 
 /*.padding10

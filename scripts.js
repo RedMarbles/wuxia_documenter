@@ -16,7 +16,7 @@ var _data_default = [
 			"parents" : ["_root"],
 			"description" : "Wololo",
 			"children" : [],
-			"color" : "white"
+			"color" : "pink"
 		}
 	]
 }];
@@ -213,7 +213,8 @@ function populateTree(nodename)
 {
 	var node_index = _data_category.findIndex(function(element){return nodename==element.name;});
 	var node_children = _data_category[node_index].children;
-	var newnode = { "name": nodename, "children":[] };
+	var node_color = _data_category[node_index].color;
+	var newnode = { "name": nodename, "color":node_color, "children":[] };
 	// loop through and add children to the new node
 	for (child_index in node_children)
 	{
@@ -232,9 +233,9 @@ function recursiveHeirarchy(local_tree)
 	for (node_ind in local_tree.children)
 	{
 		node = local_tree.children[node_ind];
-		html = html + "<li> "
+		html = html + "<li class='heir_item'> "
 		html = html + "<a href=# data-toggle='collapse' data-target='#heirlist_id" + underscorer(node.name) + "'> [" + node.children.length + "] </a>"; // The number of children classes, as well as the collapsibe button
-		html = html + "<a class='heir_element' href=# id='heir_id" + node.name + "' onClick='objectSelected(this.id)' >" + node.name + "</a>";
+		html = html + "<a class='heir_element color-" + node.color + "' href=# id='heir_id" + node.name + "' onClick='objectSelected(this.id)' >" + node.name + "</a>";
 		html = html + recursiveHeirarchy(node);
 		html = html + "</li> \n";
 	}
@@ -270,6 +271,7 @@ function reload() {
 	document.getElementById('object_name').value = _data_element.name;
 	document.getElementById('object_parents').value = _data_element.parents;
 	document.getElementById('object_desc').value = _data_element.description;
+	document.getElementById('select_color').value = _data_element.color;
 
 	// Specify whether the current file has been saved or not
 	if(_data_saved == true)
@@ -288,6 +290,7 @@ function clickUpdate()
 	var newname = document.getElementById('object_name').value;
 	var newparents = document.getElementById('object_parents').value;
 	var newdesc = document.getElementById('object_desc').value;
+	var newcolor = document.getElementById('select_color').value;
 	//var newcolor = 
 
 	if(_data_element.name == "_root")
@@ -336,6 +339,7 @@ function clickUpdate()
 	_data_element.name = newname;
 	_data_element.parents = parents_data;
 	_data_element.description = newdesc;
+	_data_element.color = newcolor;
 	_element_saved = true;
 	_data_saved = false;
 	fillChildren();
