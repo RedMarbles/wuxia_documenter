@@ -31,6 +31,10 @@ var _data_category = _data_total[_index_category].cat_data
 
 var _data_element = _data_category[_index_element]
 
+var _data_saved = false; // Records whether the entire dataset has been saved yet
+
+var _element_saved = true; // Records whether any changes have been made to the current element
+
 fillChildren();
 
 
@@ -166,6 +170,8 @@ function saveData()
 {
 	var s = JSON.stringify( _data_total )
 	download("test.json", s)
+	_data_saved = true;
+	reload();
 }
 
 
@@ -215,6 +221,7 @@ function recursiveHeirarchy(local_tree)
 	{
 		node = local_tree.children[node_ind];
 		html = html + "<li> <a class='heir_element' href=# id='heir_id" + node.name + "' onClick='objectSelected(this.id)' >" + node.name + "</a>";
+		html = html + " [" + node.children.length + "]"; // The number of children classes
 		html = html + recursiveHeirarchy(node);
 		html = html + "</li> \n";
 	}
@@ -224,9 +231,16 @@ function recursiveHeirarchy(local_tree)
 
 function objectSelected(object_id)
 {
+	if (_element_saved == false)
+	{
+		alert("WARNING: You have unsaved changes to the current element. Please Update or Revert.");
+		return;
+	}
+
 	var object_name = object_id.substring(7)
-	_index_element = _data_category.findIndex( function(element){return object_name==element.name});
+	_index_element = _data_category.findIndex( function(element){return object_name==element.name} );
 	_data_element = _data_category[_index_element];
+	_element_saved = true;
 	reload();
 }
 
@@ -243,6 +257,16 @@ function reload() {
 	document.getElementById('object_name').value = _data_element.name;
 	document.getElementById('object_parents').value = _data_element.parents;
 	document.getElementById('object_desc').value = _data_element.description;
+
+	// Specify whether the current file has been saved or not
+	if(_data_saved == true)
+	{
+		document.getElementById('saveBtn').innerHTML = "<span class='glyphicon glyphicon-save-file'></span> Save";
+	}
+	else
+	{
+		document.getElementById('saveBtn').innerHTML = "<span class='glyphicon glyphicon-save-file'></span> Save*";
+	}
 }
 
 function clickUpdate()
@@ -299,13 +323,27 @@ function clickUpdate()
 	_data_element.name = newname;
 	_data_element.parents = parents_data;
 	_data_element.description = newdesc;
+	_element_saved = true;
+	_data_saved = false;
 	fillChildren();
+	reload();
+}
+
+function clickRevert()
+{
+	_element_saved = true;
 	reload();
 }
 
 
 function clickAddObject()
 {
+	if (_element_saved == false)
+	{
+		alert("WARNING: You have unsaved changes to the current element. Please Update or Revert.");
+		return;
+	}
+
 	var randomname = "NewObject#"+Math.floor(Math.random() * 9934925);
 	var newelement = {
 		"name" : randomname,
@@ -318,6 +356,8 @@ function clickAddObject()
 
 	_index_element = _data_category.findIndex(function(elem){return elem.name==randomname})
 	_data_element = _data_category[_index_element]
+
+	_data_saved = false;
 
 	fillChildren();
 	reload();
@@ -342,9 +382,9 @@ function clickDelObject()
 		{
 			element.parents.splice(remove_index,1);
 		}
-		if (element.parents.length == 0)
+		if (element.parents.length == 0 && element.name != "_root")
 		{
-			element.parents.length = ["_root"];
+			element.parents = ["_root"];
 		}
 	}
 
@@ -353,4 +393,42 @@ function clickDelObject()
 
 	fillChildren();
 	reload();
+}
+
+
+function clickNewButton()
+{
+	_data_total = [
+	{
+		"cat_name" : "Empty",
+		"cat_data" : [
+			{
+				"name" : "_root",
+				"parents" : [],
+				"description" : "Root node",
+				"children" : [],
+				"color" : "white"
+			},
+			{
+				"name" : "Empty",
+				"parents" : ["_root"],
+				"description" : "Wololo",
+				"children" : [],
+				"color" : "white"
+			}
+		]
+	}];
+	_index_category = 0;
+	_index_element = 0;
+	_data_category = _data_total[_index_category];
+	_data_element = _data_category[_index_element];
+	_element_saved = true;
+	_data_saved = false;
+	fillChildren();
+	reload();
+}
+
+function changeForm()
+{
+	_element_saved = false;
 }
