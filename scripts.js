@@ -138,6 +138,17 @@ function generateData() {
 	download("test.json", s)
 }
 
+function underscorer(value)
+{
+	var output = "";
+	for (i in value)
+	{
+		var c = value[i];
+		if(c==" ") c="_";
+		output = output + c;
+	}
+	return output;
+}
 
 function download(filename, text) {
 	var element = document.createElement('a');
@@ -216,12 +227,14 @@ function recursiveHeirarchy(local_tree)
 {
 	// currently local_tree = {name, children(tree)}
 	if (local_tree.children.length == 0) return "";
-	html = "<ul> \n";
+	html = "<ul class='collapse in' id='heirlist_id" + underscorer(local_tree.name) + "'> \n";
+	//html = "<ul class='collapse in' > \n";
 	for (node_ind in local_tree.children)
 	{
 		node = local_tree.children[node_ind];
-		html = html + "<li> <a class='heir_element' href=# id='heir_id" + node.name + "' onClick='objectSelected(this.id)' >" + node.name + "</a>";
-		html = html + " [" + node.children.length + "]"; // The number of children classes
+		html = html + "<li> "
+		html = html + "<a href=# data-toggle='collapse' data-target='#heirlist_id" + underscorer(node.name) + "'> [" + node.children.length + "] </a>"; // The number of children classes, as well as the collapsibe button
+		html = html + "<a class='heir_element' href=# id='heir_id" + node.name + "' onClick='objectSelected(this.id)' >" + node.name + "</a>";
 		html = html + recursiveHeirarchy(node);
 		html = html + "</li> \n";
 	}
@@ -344,7 +357,7 @@ function clickAddObject()
 		return;
 	}
 
-	var randomname = "NewObject#"+Math.floor(Math.random() * 9934925);
+	var randomname = "NewObject-"+Math.floor(Math.random() * 9934925);
 	var newelement = {
 		"name" : randomname,
 		"parents" : [_data_element.name], // Add the new element as a child of the current element
