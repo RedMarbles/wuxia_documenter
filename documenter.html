@@ -15,7 +15,7 @@
 	<title> The Wuxia Documenter Project </title>
 </head>
 
-<body onLoad="reload()">
+<body onLoad="clickNewButton()">
 	
 	<div class="container" id="frame_root">
 		<div class="page-header">
@@ -58,6 +58,16 @@
 				<h3> Object Heirarchy </h3>
 				<button type="button" class="btn" onClick="clickAddObject()"> Add Object <span class="glyphicon glyphicon-plus"></span> </button>
 				<button type="button" class="btn" onClick="clickDelObject()"> Del Object <span class="glyphicon glyphicon-minus"></span> </button>
+				<span class="dropdown">
+					<button class="btn dropdown-toggle" type="button" id="categoryDropdownButton" data-toggle="dropdown"> 
+						Categories <span class="caret"> </span>
+					</button>
+					<ul class="dropdown-menu">
+						<li> <a class="dropdown-item" href=# onClick="categoryAdd()"> New Category </a> </li>
+						<li> <a class="dropdown-item" href=# onClick="categoryRename()"> Rename Category </a> </li>
+						<li> <a class="dropdown-item" href=# onClick="categoryDelete()"> Delete Category </a> </li>
+					</ul>
+				</span>
 				<br/>
 				<!--div class="list-group" id="heirarchy-list" style="overflow:auto; height:100%;">
 					<a href="#" class="list-group-item heir-item active"> Character 1 </a>

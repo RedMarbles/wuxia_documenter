@@ -1,25 +1,45 @@
 
 // A default set of data for the New button
 var _data_default = [
-{
-	"cat_name" : "Empty",
-	"cat_data" : [
-		{
-			"name" : "_root",
-			"parents" : [],
-			"description" : "Root node",
-			"children" : [],
-			"color" : "white"
-		},
-		{
-			"name" : "Empty",
-			"parents" : ["_root"],
-			"description" : "Wololo",
-			"children" : [],
-			"color" : "pink"
-		}
-	]
-}];
+	{
+		"cat_name" : "Category1",
+		"cat_data" : [
+			{
+				"name" : "_root",
+				"parents" : [],
+				"description" : "Root node",
+				"children" : [],
+				"color" : "white"
+			},
+			{
+				"name" : "Empty",
+				"parents" : ["_root"],
+				"description" : "Wololo",
+				"children" : [],
+				"color" : "pink"
+			}
+		]
+	},
+	{
+		"cat_name" : "Category2",
+		"cat_data" : [
+			{
+				"name" : "_root",
+				"parents" : [],
+				"description" : "Root node",
+				"children" : [],
+				"color" : "white"
+			},
+			{
+				"name" : "Blank",
+				"parents" : ["_root"],
+				"description" : "Wololo",
+				"children" : [],
+				"color" : "green"
+			}
+		]	
+	}
+];
 
 var _data_total = _data_default.slice();
 
@@ -251,18 +271,136 @@ function objectSelected(object_id)
 		return;
 	}
 
-	var object_name = object_id.substring(7)
+	var object_name = object_id.substring(7) // Ignore the first 7 letters of the object id, which are "heir_id"
 	_index_element = _data_category.findIndex( function(element){return object_name==element.name} );
 	_data_element = _data_category[_index_element];
 	_element_saved = true;
 	reload();
 }
 
+function categorySelected(category_id)
+{
+	if (_element_saved == false)
+	{
+		alert("WARNING: You have unsaved changes to the current element. Please Update or Revert.");
+		return;
+	}
+
+	var category_name = category_id.substring(6) // Ignore the first 6 letters of the id, which are "cat_id"
+	_index_category = _data_total.findIndex( function(element){return category_name==element.cat_name;} );
+	_index_element = 0;
+	_data_category = _data_total[_index_category].cat_data
+	_element_saved = true;
+	fillChildren();
+	reload();
+}
+
+function categoryDelete()
+{
+	if(_data_total.length == 1)
+	{
+		alert("ERROR: Cannot delete the last category");
+		return;
+	}
+
+	var check = confirm("Are you sure you want to delete the " + _data_total[_index_category].cat_name + " category?");
+	if (check==false) return;
+
+	_data_total.splice(_index_category,1);
+	_index_category = 0;
+	_index_element = 0;
+	_data_category = _data_total[_index_category];
+	_data_element = _data_category[_index_element];
+	fillChildren();
+	reload();
+}
+
+function categoryRename()
+{
+	var currentname = _data_total[_index_category].cat_name;
+	var newname = prompt("What do you want to rename " + currentname + " as?", currentname);
+
+	if ( newname==null || newname=="" || newname==currentname) return; // Do nothing if the user enters blank text or the same name
+
+	if ( _data_total.findIndex(function(cat){return cat.cat_name==newname;}) != -1)
+	{
+		alert("ERROR: A category by that name already exists.");
+		return;
+	}
+
+	_data_total[_index_category].cat_name = newname;
+	fillChildren();
+	reload();
+}
+
+function categoryAdd()
+{
+	var newname = prompt("What do you want to name the new category?", "Category-"+Math.floor(Math.random() * 9934925));
+
+	if ( newname==null || newname=="" ) return;
+
+	if ( _data_total.findIndex(function(cat){return cat.cat_name==newname}) != -1)
+	{
+		alert("ERROR: A category by that name already exists.")
+		return;
+	}
+
+	var newcategory = {
+		"cat_name" : newname,
+		"cat_data" : [
+			{
+				"name" : "_root",
+				"parents" : [],
+				"description" : "Root node",
+				"children" : [],
+				"color" : "white"
+			},
+			{
+				"name" : "Empty",
+				"parents" : ["_root"],
+				"description" : "Wololo",
+				"children" : [],
+				"color" : "pink"
+			}
+		]
+	};
+	_data_total.push(newcategory);
+
+	_index_category = _data_total.findIndex(function(cat){return cat.cat_name==newname});
+	_index_element = 0;
+	_data_category = _data_total[_index_category];
+	_data_element = _data_category[_index_element];
+	fillChildren();
+	reload();
+}
+
+function generateTabbar()
+{
+	var html_tabs = "";
+	for(cat_index in _data_total)
+	{
+		// Setting the active class
+		var html_active = "";
+		if(cat_index == _index_category) html_active = " class='active'";
+		var cat_name = _data_total[cat_index].cat_name;
+		html_tabs = html_tabs + "<li" + html_active + ">";
+
+		// Link to switch to category
+		html_tabs = html_tabs + "<a href=# id='cat_id"+cat_name+"' onClick='categorySelected(this.id)' >";
+		html_tabs = html_tabs + cat_name;
+		html_tabs = html_tabs + "</a>";
+		html_tabs = html_tabs + "</li> \n";
+	}
+	return html_tabs;
+}
+
 function reload() {
-	// Do nothing for now
 	//generate_data()
 	_data_category = _data_total[_index_category].cat_data
 	_data_element = _data_category[_index_element]
+
+	// Set up the category tabs on top
+	var tabbar = document.getElementById('tabbar').innerHTML = generateTabbar();
 
 	tree = []
 	tree = populateTree("_root"); // Fill the tree beginning from the root node
@@ -416,25 +554,45 @@ function clickDelObject()
 function clickNewButton()
 {
 	_data_total = [
-	{
-		"cat_name" : "Empty",
-		"cat_data" : [
-			{
-				"name" : "_root",
-				"parents" : [],
-				"description" : "Root node",
-				"children" : [],
-				"color" : "white"
-			},
-			{
-				"name" : "Empty",
-				"parents" : ["_root"],
-				"description" : "Wololo",
-				"children" : [],
-				"color" : "white"
-			}
-		]
-	}];
+		{
+			"cat_name" : "Category1",
+			"cat_data" : [
+				{
+					"name" : "_root",
+					"parents" : [],
+					"description" : "Root node",
+					"children" : [],
+					"color" : "white"
+				},
+				{
+					"name" : "Empty",
+					"parents" : ["_root"],
+					"description" : "Wololo",
+					"children" : [],
+					"color" : "pink"
+				}
+			]
+		},
+		{
+			"cat_name" : "Category2",
+			"cat_data" : [
+				{
+					"name" : "_root",
+					"parents" : [],
+					"description" : "Root node",
+					"children" : [],
+					"color" : "white"
+				},
+				{
+					"name" : "Blank",
+					"parents" : ["_root"],
+					"description" : "Wololo",
+					"children" : [],
+					"color" : "green"
+				}
+			]	
+		}
+	];
 	_index_category = 0;
 	_index_element = 0;
 	_data_category = _data_total[_index_category];
