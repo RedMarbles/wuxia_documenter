@@ -242,7 +242,7 @@ function populateTree(nodename,currentcycle)
 	var node_index = _data_category.findIndex(function(element){return nodename==element.name;});
 	var node_children = _data_category[node_index].children;
 	var node_color = _data_category[node_index].color;
-	var newnode = { "name": nodename, "color":node_color, "children":[] };
+	var newnode = { "name": nodename, "color":node_color, "children":[], "collapseid":String(Math.floor(Math.random()*5124335)) };
 
 	if( currentcycle.indexOf( nodename ) != -1)
 	{
@@ -272,13 +272,13 @@ function recursiveHeirarchy(local_tree)
 		return alen - blen;
 	});
 
-	var html = "<ul class='collapse in' id='heirlist_id" + underscorer(local_tree.name) + "'> \n";
+	var html = "<ul class='collapse in' id='heirlist_id" + underscorer(local_tree.name)+ local_tree.collapseid + "'> \n";
 
 	for (node_ind in local_tree.children)
 	{
-		node = local_tree.children[node_ind];
+		var node = local_tree.children[node_ind];
 		html = html + "<li class='heir_item'> "
-		html = html + "<a href=# data-toggle='collapse' data-target='#heirlist_id" + underscorer(node.name) + "'> [" + node.children.length + "] </a>"; // The number of children classes, as well as the collapsibe button
+		html = html + "<a href=# data-toggle='collapse' data-target='#heirlist_id" + underscorer(node.name) + node.collapseid + "'> [" + node.children.length + "] </a>"; // The number of children classes, as well as the collapsibe button
 		html = html + "<a class='heir_element color-" + node.color + "' href=# id='heir_id" + node.name + "' onClick='objectSelected(this.id)' >" + node.name + "</a>";
 		html = html + recursiveHeirarchy(node);
 		html = html + "</li> \n";
@@ -452,14 +452,36 @@ function reload() {
 	}
 }
 
-// Removes faulty characters from the string
+function replaceAllString(string, find, replace)
+{
+	output = string.slice();
+	while (output.indexOf(find) != -1)
+	{
+		output = output.replace(find, replace);
+	}
+	return output;
+}
+
+// Removes faulty characters from the string, to prevent XSS
 function sanitizeString(input)
 {
-	output = input.slice();
-	while (output.indexOf("'") != -1)
-	{
-		output = output.replace("'","");
-	}
+	var output = input.slice();
+	output = replaceAllString(output, "&", ""); // Replace all ampersands
+	output = replaceAllString(output, "'", ""); // Replace all apostrophes
+	output = replaceAllString(output, "<", ""); // Replace all angle brackets
+	output = replaceAllString(output, ">", ""); // Replace all angle brackets
+	output = replaceAllString(output, "&", ""); // Replace all ampersands
+	return output;
+}
+
+function html_escape(input)
+{
+	var output = input.slice();
+	// output = replaceAllString(output, "&", "&amp"); // Replace all ampersands
+	output = replaceAllString(output, "'", "&#x27"); // Replace all apostrophes
+	output = replaceAllString(output, '"', "&quot"); // Replace all apostrophes
+	output = replaceAllString(output, "<", "&lt"); // Replace all angle brackets
+	output = replaceAllString(output, ">", "&gt"); // Replace all angle brackets
 	return output;
 }
 
@@ -503,7 +525,7 @@ function clickUpdate()
 	parents_data = newparents.split(","); // Split the parents using commas
 	for (parents_index in parents_data)
 	{
-		parent = sanitizeString( parents_data[parents_index] );
+		var parent = sanitizeString( parents_data[parents_index] );
 		if ( _data_category.findIndex(function(elem){return elem.name==parent}) == -1)
 		{
 			alert("ERROR: Could not find the parent named '" + parent + "'");
