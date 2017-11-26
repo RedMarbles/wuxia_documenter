@@ -253,8 +253,16 @@ function recursiveHeirarchy(local_tree)
 {
 	// currently local_tree = {name, children(tree)}
 	if (local_tree.children.length == 0) return "";
-	html = "<ul class='collapse in' id='heirlist_id" + underscorer(local_tree.name) + "'> \n";
-	//html = "<ul class='collapse in' > \n";
+
+	// Sort the local tree so that the children are arranged such that children without any further branches are placed first.
+	local_tree.children.sort(function(a,b){
+		var alen = (a.children.length>0) ? 1 : 0;
+		var blen = (b.children.length>0) ? 1 : 0;
+		return alen - blen;
+	});
+
+	var html = "<ul class='collapse in' id='heirlist_id" + underscorer(local_tree.name) + "'> \n";
+
 	for (node_ind in local_tree.children)
 	{
 		node = local_tree.children[node_ind];
@@ -407,7 +415,7 @@ function reload() {
 	// Set up the category tabs on top
 	var tabbar = document.getElementById('tabbar').innerHTML = generateTabbar();
 
-	document.getElementById('title').innerHTML = "The Wuxia Documenter Project - "+ _project_name;
+	document.getElementById('title').innerHTML = "The Wuxia Documenter Project - " + _project_name;
 
 	tree = []
 	tree = populateTree("_root"); // Fill the tree beginning from the root node
