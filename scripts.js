@@ -234,17 +234,28 @@ function fillChildren()
 	}
 }
 
-function populateTree(nodename)
+// Recursively creates a tree that holds the structure of the heirarchy
+// param nodename - The name of the new node to add
+// param currentcycle - A list of all the parent nodes on the current branch leading up to the current node
+function populateTree(nodename,currentcycle)
 {
 	var node_index = _data_category.findIndex(function(element){return nodename==element.name;});
 	var node_children = _data_category[node_index].children;
 	var node_color = _data_category[node_index].color;
 	var newnode = { "name": nodename, "color":node_color, "children":[] };
+
+	if( currentcycle.indexOf( nodename ) != -1)
+	{
+		alert('ERROR: Found an infinite loop: ' + String(currentcycle) + ', ' + nodename);
+		return newnode;
+	}
+	currentcycle.push(nodename);
+
 	// loop through and add children to the new node
 	for (child_index in node_children)
 	{
-		var child_name = node_children[child_index]
-		newnode.children.push( populateTree(child_name) )
+		var child_name = node_children[child_index];
+		newnode.children.push( populateTree(child_name, currentcycle.slice() ) );
 	}
 	return newnode;
 }
@@ -418,7 +429,7 @@ function reload() {
 	document.getElementById('title').innerHTML = "The Wuxia Documenter Project - " + _project_name;
 
 	tree = []
-	tree = populateTree("_root"); // Fill the tree beginning from the root node
+	tree = populateTree("_root",[]); // Fill the tree beginning from the root node
 	document.getElementById('heirarchy').innerHTML = recursiveHeirarchy(tree);
 
 	document.getElementById('object_name').value = _data_element.name;
