@@ -426,6 +426,10 @@ function reload() {
 	document.getElementById('object_desc').value = _data_element.description;
 	document.getElementById('select_color').value = _data_element.color;
 
+	// Set the maximum value and current value of the index
+	document.getElementById('object_index_number').setAttribute("max", "'" + _data_category.length + "'");
+	document.getElementById('object_index_number').value = _index_element;
+
 	// Specify whether the current file has been saved or not
 	if(_data_saved == true)
 	{
@@ -455,7 +459,8 @@ function clickUpdate()
 	var newparents = document.getElementById('object_parents').value;
 	var newdesc = document.getElementById('object_desc').value;
 	var newcolor = document.getElementById('select_color').value;
-	//var newcolor = 
+	var newindex = document.getElementById('object_index_number').value; // This is still a string at the moment
+	newindex = Number(newindex);
 
 	newname = sanitizeString(newname);
 
@@ -475,6 +480,12 @@ function clickUpdate()
 			alert("ERROR: There is a name collision. Please select a new name.");
 			return;
 		}
+	}
+
+	if (newindex>=_data_category.length || newindex < 1 || !Number.isInteger(newindex))
+	{
+		alert("ERROR: The index has to be an integer value between 1 and " + String(_data_category.length-1) );
+		return;
 	}
 
 	// Process and verify the parents data
@@ -508,6 +519,27 @@ function clickUpdate()
 	_data_element.color = newcolor;
 	_element_saved = true;
 	_data_saved = false;
+
+	if (newindex != _index_element)
+	{
+		_data_category.splice(_index_element,1); // Delete the element at this position
+
+		// To account for the change in position because of deleting the old position
+		if(newindex > _index_element) newindex -= 1;
+
+		// Create a new element and add it to the array at the desired position
+		var newelement = {
+			'name' : newname,
+			'parents' : parents_data,
+			'description' : newdesc,
+			'children' : [],
+			'color' : newcolor
+		};
+		_data_category.splice(newindex,0,newelement);
+		
+		_index_element = newindex;
+	}
+
 	fillChildren();
 	reload();
 }
