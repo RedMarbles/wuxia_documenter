@@ -536,7 +536,7 @@ function clickUpdate()
 			'color' : newcolor
 		};
 		_data_category.splice(newindex,0,newelement);
-		
+
 		_index_element = newindex;
 	}
 
@@ -576,6 +576,9 @@ function clickAddObject()
 
 	fillChildren();
 	reload();
+
+	// Set the keyboard focus on the Name input field
+	document.getElementById('object_name').focus();
 }
 
 function clickDelObject()
