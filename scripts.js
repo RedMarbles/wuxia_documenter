@@ -421,10 +421,12 @@ function generateTabbar()
 // Resize heirarchy list and object description to fit window
 function resizeElements()
 {
-	var heir_list_element = document.getElementById('heirarchy')
-	heir_list_element.style.height = String( $(window).height() - heir_list_element.getBoundingClientRect().top - 5 ) + "px";
+	var heir_list_element = document.getElementById('heirarchy');
+	var dynamic_height = $(window).height() - heir_list_element.getBoundingClientRect().top - 5;
+	heir_list_element.style.height = String( Math.max(dynamic_height,250) ) + "px";
 	var desc_element = document.getElementById('object_desc')
-	desc_element.style.height = String( $(window).height() - desc_element.getBoundingClientRect().top - 5 ) + "px";
+	dynamic_height = $(window).height() - desc_element.getBoundingClientRect().top - 5;
+	desc_element.style.height = String( Math.max(dynamic_height,150) ) + "px";
 }
 
 function reload() {
