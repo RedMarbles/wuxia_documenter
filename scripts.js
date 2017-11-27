@@ -418,10 +418,22 @@ function generateTabbar()
 	return html_tabs;
 }
 
+// Resize heirarchy list and object description to fit window
+function resizeElements()
+{
+	var heir_list_element = document.getElementById('heirarchy')
+	heir_list_element.style.height = String( $(window).height() - heir_list_element.getBoundingClientRect().top - 5 ) + "px";
+	var desc_element = document.getElementById('object_desc')
+	desc_element.style.height = String( $(window).height() - desc_element.getBoundingClientRect().top - 5 ) + "px";
+}
+
 function reload() {
 	//generate_data()
-	_data_category = _data_total[_index_category].cat_data
-	_data_element = _data_category[_index_element]
+	_data_category = _data_total[_index_category].cat_data;
+	_data_element = _data_category[_index_element];
+
+	// Resize the elements
+	resizeElements();
 
 	// Set up the category tabs on top
 	var tabbar = document.getElementById('tabbar').innerHTML = generateTabbar();
