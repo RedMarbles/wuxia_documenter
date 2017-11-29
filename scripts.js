@@ -509,7 +509,7 @@ function clickUpdate()
 	var newindex = document.getElementById('object_index_number').value; // This is still a string at the moment
 	newindex = Number(newindex);
 
-	newname = sanitizeString(newname);
+	newname = sanitizeString(newname).trim();
 
 	if(_data_element.name == "_root")
 	{
@@ -539,12 +539,13 @@ function clickUpdate()
 	parents_data = newparents.split(","); // Split the parents using commas
 	for (parents_index in parents_data)
 	{
-		var parent = sanitizeString( parents_data[parents_index] );
+		var parent = sanitizeString( parents_data[parents_index] ).trim();
 		if ( _data_category.findIndex(function(elem){return elem.name==parent}) == -1)
 		{
 			alert("ERROR: Could not find the parent named '" + parent + "'");
 			return;
 		}
+		parents_data[parents_index] = parent;
 	}
 
 
