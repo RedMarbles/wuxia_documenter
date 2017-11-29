@@ -278,8 +278,8 @@ function recursiveHeirarchy(local_tree)
 	{
 		var node = local_tree.children[node_ind];
 		html = html + "<li class='heir_item'> "
-		html = html + "<a href=# data-toggle='collapse' data-target='#heirlist_id" + underscorer(node.name) + node.collapseid + "'> [" + node.children.length + "] </a>"; // The number of children classes, as well as the collapsibe button
-		html = html + "<a class='heir_element color-" + node.color + "' href=# id='heir_id" + node.name + "' onClick='objectSelected(this.id)' >" + node.name + "</a>";
+		html = html + "<a href='#' data-toggle='collapse' data-target='#heirlist_id" + underscorer(node.name) + node.collapseid + "'> [" + node.children.length + "] </a>"; // The number of children classes, as well as the collapsibe button
+		html = html + "<a class='heir_element color-" + node.color + "' href='#' id='heir_id" + node.name + "' onClick='objectSelected(this.id)' >" + node.name + "</a>";
 		html = html + recursiveHeirarchy(node);
 		html = html + "</li> \n";
 	}
@@ -410,7 +410,7 @@ function generateTabbar()
 		html_tabs = html_tabs + "<li" + html_active + ">";
 
 		// Link to switch to category
-		html_tabs = html_tabs + "<a href=# id='cat_id"+cat_name+"' onClick='categorySelected(this.id)' >";
+		html_tabs = html_tabs + "<a href='#' id='cat_id"+cat_name+"' onClick='categorySelected(this.id)' >";
 		html_tabs = html_tabs + cat_name;
 		html_tabs = html_tabs + "</a>";
 		html_tabs = html_tabs + "</li> \n";
