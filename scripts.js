@@ -61,7 +61,8 @@ fillChildren();
 
 
 // Function to generate some sample data
-function generateData() {
+function generateData() 
+{
 	var data_obj = {
 		"name" : "Nie Yan",
 		"parents" : [ "Asskickers United" ],
@@ -272,18 +273,24 @@ function recursiveHeirarchy(local_tree)
 		return alen - blen;
 	});
 
-	var html = "<ul class='collapse in' id='heirlist_id" + underscorer(local_tree.name)+ local_tree.collapseid + "'> \n";
+	//var html = "<ul class='collapse in' id='heirlist_id" + underscorer(local_tree.name)+ local_tree.collapseid + "'> \n";
+	var html = '<ul class="collapse in" id="heirlist_id' + underscorer(local_tree.name)+ local_tree.collapseid + '"> \n';
 
 	for (node_ind in local_tree.children)
 	{
 		var node = local_tree.children[node_ind];
-		html = html + "<li class='heir_item'> "
-		html = html + "<a href='#' data-toggle='collapse' data-target='#heirlist_id" + underscorer(node.name) + node.collapseid + "'> [" + node.children.length + "] </a>"; // The number of children classes, as well as the collapsibe button
-		html = html + "<a class='heir_element color-" + node.color + "' href='#' id='heir_id" + node.name + "' onClick='objectSelected(this.id)' >" + node.name + "</a>";
+		//html = html + "<li class='heir_item'> ";
+		html = html + '<li class="heir_item"> ';
+		//html = html + "<a href='#' data-toggle='collapse' data-target='#heirlist_id" + underscorer(node.name) + node.collapseid + "'> [" + node.children.length + "] </a>"; // The number of children classes, as well as the collapsibe button
+		html = html + '<a href="#" data-toggle="collapse" data-target="#heirlist_id' + underscorer(node.name) + node.collapseid + '"> [' + node.children.length + '] </a>'; // The number of children classes, as well as the collapsibe button
+		//html = html + "<a class='heir_element color-" + node.color + "' href='#' id='heir_id" + node.name + "' onClick='objectSelected(this.id)' >" + node.name + "</a>";
+		html = html + '<a class="heir_element color-' + node.color + '" href="#" id="heir_id' + node.name + '" onClick="objectSelected(this.id)" >' + node.name + '</a>';
 		html = html + recursiveHeirarchy(node);
-		html = html + "</li> \n";
+		//html = html + "</li> \n";
+		html = html + '</li> \n';
 	}
-	html = html + "</ul> \n";
+	//html = html + "</ul> \n";
+	html = html + '</ul> \n';
 	return html;
 }
 
@@ -429,7 +436,8 @@ function resizeElements()
 	desc_element.style.height = String( Math.max(dynamic_height,150) ) + "px";
 }
 
-function reload() {
+function reload() 
+{
 	//generate_data()
 	_data_category = _data_total[_index_category].cat_data;
 	_data_element = _data_category[_index_element];
@@ -481,7 +489,8 @@ function sanitizeString(input)
 {
 	var output = input.slice();
 	output = replaceAllString(output, "&", ""); // Replace all ampersands
-	output = replaceAllString(output, "'", ""); // Replace all apostrophes
+	//output = replaceAllString(output, "'", ""); // Replace all apostrophes
+	output = replaceAllString(output, '"', ''); // Replace all double-quotes
 	output = replaceAllString(output, "<", ""); // Replace all angle brackets
 	output = replaceAllString(output, ">", ""); // Replace all angle brackets
 	output = replaceAllString(output, "&", ""); // Replace all ampersands
