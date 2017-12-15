@@ -274,7 +274,7 @@ function recursiveHeirarchy(local_tree)
 	});
 
 	//var html = "<ul class='collapse in' id='heirlist_id" + underscorer(local_tree.name)+ local_tree.collapseid + "'> \n";
-	var html = '<ul class="collapse in" id="heirlist_id' + underscorer(local_tree.name)+ local_tree.collapseid + '"> \n';
+	var html = '<ul class="collapse in" id="heirlist_id' + sanitizeStringForLinks(local_tree.name)+ local_tree.collapseid + '"> \n';
 
 	for (node_ind in local_tree.children)
 	{
@@ -282,7 +282,7 @@ function recursiveHeirarchy(local_tree)
 		//html = html + "<li class='heir_item'> ";
 		html = html + '<li class="heir_item"> ';
 		//html = html + "<a href='#' data-toggle='collapse' data-target='#heirlist_id" + underscorer(node.name) + node.collapseid + "'> [" + node.children.length + "] </a>"; // The number of children classes, as well as the collapsibe button
-		html = html + '<a href="#" data-toggle="collapse" data-target="#heirlist_id' + underscorer(node.name) + node.collapseid + '"> [' + node.children.length + '] </a>'; // The number of children classes, as well as the collapsibe button
+		html = html + '<a href="#" data-toggle="collapse" data-target="#heirlist_id' + sanitizeStringForLinks(node.name) + node.collapseid + '"> [' + node.children.length + '] </a>'; // The number of children classes, as well as the collapsibe button
 		//html = html + "<a class='heir_element color-" + node.color + "' href='#' id='heir_id" + node.name + "' onClick='objectSelected(this.id)' >" + node.name + "</a>";
 		html = html + '<a class="heir_element color-' + node.color + '" href="#" id="heir_id' + node.name + '" onClick="objectSelected(this.id)" >' + node.name + '</a>';
 		html = html + recursiveHeirarchy(node);
@@ -494,7 +494,17 @@ function sanitizeString(input)
 	output = replaceAllString(output, "<", ""); // Replace all angle brackets
 	output = replaceAllString(output, ">", ""); // Replace all angle brackets
 	output = replaceAllString(output, "&", ""); // Replace all ampersands
+	output = replaceAllString(output, "\\", ""); // Replace all backslashes
+	output = replaceAllString(output, ",", "-");
 	return output;
+}
+
+// Removes faulty characters that make it difficult to read strings
+function sanitizeStringForLinks(input)
+{
+	var output = input.slice();
+	output = replaceAllString(output, "/", "_");
+	output = replaceAllString(output, "'", "_");
 }
 
 function html_escape(input)
