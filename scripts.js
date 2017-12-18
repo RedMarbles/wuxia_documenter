@@ -548,6 +548,7 @@ function clickUpdate()
 		}
 	}
 
+	if (newindex==0) newindex = 1;
 	if (newindex>=_data_category.length || newindex < 1 || !Number.isInteger(newindex))
 	{
 		alert("ERROR: The index has to be an integer value between 1 and " + String(_data_category.length-1) );
