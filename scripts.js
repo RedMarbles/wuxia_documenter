@@ -455,7 +455,7 @@ function reload()
 	document.getElementById('heirarchy').innerHTML = recursiveHeirarchy(tree);
 
 	document.getElementById('object_name').value = _data_element.name;
-	document.getElementById('object_parents').value = _data_element.parents;
+	document.getElementById('object_parents').value = _data_element.parents.join(" ; ");
 	document.getElementById('object_desc').value = _data_element.description;
 	document.getElementById('select_color').value = _data_element.color;
 
@@ -495,7 +495,7 @@ function sanitizeString(input)
 	output = replaceAllString(output, ">", ""); // Replace all angle brackets
 	output = replaceAllString(output, "&", ""); // Replace all ampersands
 	output = replaceAllString(output, "\\", ""); // Replace all backslashes
-	output = replaceAllString(output, ",", "-");
+	//output = replaceAllString(output, ",", "-");
 	return output;
 }
 
@@ -556,7 +556,7 @@ function clickUpdate()
 	}
 
 	// Process and verify the parents data
-	parents_data = newparents.split(","); // Split the parents using commas
+	parents_data = newparents.split(";"); // Split the parents using commas
 	for (parents_index in parents_data)
 	{
 		var parent = sanitizeString( parents_data[parents_index] ).trim();
