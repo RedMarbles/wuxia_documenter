@@ -560,6 +560,11 @@ function clickUpdate()
 	for (parents_index in parents_data)
 	{
 		var parent = sanitizeString( parents_data[parents_index] ).trim();
+		if ( parent == _data_element.name ) // For the bug where you accidentally set its parent to its old name
+		{
+			alert("ERROR: Attempting to set element '" + parent +"' as its own parent");
+			return;
+		}
 		if ( _data_category.findIndex(function(elem){return elem.name==parent}) == -1)
 		{
 			alert("ERROR: Could not find the parent named '" + parent + "'");
