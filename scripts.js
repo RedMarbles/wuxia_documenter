@@ -306,7 +306,7 @@ function objectSelected(object_id)
 	_index_element = _data_category.findIndex( function(element){return object_name==element.name} );
 	_data_element = _data_category[_index_element];
 	_element_saved = true;
-	reload();
+	reloadOnlyElementInformation();
 }
 
 function categorySelected(category_id)
@@ -436,6 +436,23 @@ function resizeElements()
 	desc_element.style.height = String( Math.max(dynamic_height,150) ) + "px";
 }
 
+// Only reloads the information about the current element without affecting the rest of the interface
+function reloadOnlyElementInformation()
+{
+	_data_category = _data_total[_index_category].cat_data;
+	_data_element = _data_category[_index_element];
+
+	document.getElementById('object_name').value = _data_element.name;
+	document.getElementById('object_parents').value = _data_element.parents.join(" ; ");
+	document.getElementById('object_desc').value = _data_element.description;
+	document.getElementById('select_color').value = _data_element.color;
+
+	// Set the maximum value and current value of the index
+	document.getElementById('object_index_number').setAttribute("max", "'" + _data_category.length + "'");
+	document.getElementById('object_index_number').value = _index_element;
+}
+
+// Reloads the entire interface
 function reload() 
 {
 	//generate_data()
@@ -454,14 +471,8 @@ function reload()
 	tree = populateTree("_root",[]); // Fill the tree beginning from the root node
 	document.getElementById('heirarchy').innerHTML = recursiveHeirarchy(tree);
 
-	document.getElementById('object_name').value = _data_element.name;
-	document.getElementById('object_parents').value = _data_element.parents.join(" ; ");
-	document.getElementById('object_desc').value = _data_element.description;
-	document.getElementById('select_color').value = _data_element.color;
-
-	// Set the maximum value and current value of the index
-	document.getElementById('object_index_number').setAttribute("max", "'" + _data_category.length + "'");
-	document.getElementById('object_index_number').value = _index_element;
+	// Fill in the frame description information
+	reloadOnlyElementInformation();
 
 	// Specify whether the current file has been saved or not
 	if(_data_saved == true)
