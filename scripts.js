@@ -57,6 +57,8 @@ var _element_saved = true; // Records whether any changes have been made to the 
 
 var _project_name = "Untitled"; // The name of the current project
 
+var _collapse_all_elements = false; // Stores whether all elements should be collapsed in the tree or not
+
 fillChildren();
 
 
@@ -189,6 +191,7 @@ function loadFileAsText()
 
 	_project_name = fileToLoad.name;
 	_project_name = _project_name.substring(0,_project_name.length-5)
+	_data_saved = true;
 
 	var fileReader = new FileReader();
 	fileReader.onload = function(fileLoadedEvent){
@@ -201,6 +204,64 @@ function loadFileAsText()
 	};
 
 	fileReader.readAsText(fileToLoad, "UTF-8");
+}
+
+function createCORSRequest(method, url) {
+  var xhr = new XMLHttpRequest();
+  if ("withCredentials" in xhr) {
+    // Check if the XMLHttpRequest object has a "withCredentials" property.
+    // "withCredentials" only exists on XMLHTTPRequest2 objects.
+    xhr.open(method, url, true);
+    console.log("Created CORS request successfully")
+  } else if (typeof XDomainRequest != "undefined") {
+    // Otherwise, check if XDomainRequest.
+    // XDomainRequest only exists in IE, and is IE's way of making CORS requests.
+    xhr = new XDomainRequest();
+    xhr.open(method, url);
+  } else {
+    // Otherwise, CORS is not supported by the browser.
+    xhr = null;
+  }
+  return xhr;
+}
+
+// Load a file from a web url instead of from the hard drive
+// Not being used right now?
+function loadFileFromUrl(url)
+{
+	var blob = null;
+	// var xhr = new XMLHttpRequest();
+	var xhr = createCORSRequest('GET', url);
+	if (!xhr) {
+		throw new Error('CORS not supported');
+	}
+	xhr.open("GET", "/favicon.png");
+	xhr.responseType = "blob";//force the HTTP response, response-type header to be blob
+	xhr.onload = function()
+	{
+	    blob = xhr.response;//xhr.response is now a blob object
+	    console.log("xhr response received");
+
+	    var fileReader = new FileReader();
+	    fileReader.onload = function(fileLoadedEvent){
+			var textFromFileLoaded = fileLoadedEvent.target.result;
+			_data_total = JSON.parse(textFromFileLoaded);
+			console.log("File text loaded")
+			fillChildren();
+			reload();
+		};
+
+		_project_name = "Demo Wikia";
+		console.log("Reading file text");
+		fileReader.readAsText(blob, "UTF-8");
+	}
+	xhr.onloadend = function()
+	{
+		console.log(xhr.readyState)
+		console.log(xhr.status)
+	}
+	xhr.send();
+	console.log("xhr request sent");
 }
 
 function saveData()
@@ -273,8 +334,12 @@ function recursiveHeirarchy(local_tree)
 		return alen - blen;
 	});
 
+	// Choose whether to collapse the element or not. "in" uncollapses, while "" collapses
+	var collapse_element = (_collapse_all_elements)?"":"in"; // Collapse list according to the global setting
+	if (local_tree.name == "_root") collapse_element = "in"; // Do not collapse the root node
+
 	//var html = "<ul class='collapse in' id='heirlist_id" + underscorer(local_tree.name)+ local_tree.collapseid + "'> \n";
-	var html = '<ul class="collapse in" id="heirlist_id' + sanitizeStringForLinks(local_tree.name)+ local_tree.collapseid + '"> \n';
+	var html = '<ul class="collapse '+ collapse_element + '" id="heirlist_id' + sanitizeStringForLinks(local_tree.name)+ local_tree.collapseid + '"> \n';
 
 	for (node_ind in local_tree.children)
 	{
@@ -697,6 +762,18 @@ function clickDelObject()
 	reload();
 }
 
+function clickExpandAllCollapses()
+{
+	_collapse_all_elements = false;
+	reload();
+}
+
+function clickCollapseAllCollapses()
+{
+	_collapse_all_elements = true;
+	reload();
+}
+
 
 function clickNewButton()
 {
@@ -742,7 +819,25 @@ function clickNewButton()
 	];
 	_index_category = 0;
 	_index_element = 0;
-	_data_category = _data_total[_index_category];
+	_data_category = _data_total[_index_category].cat_data;
+	_data_element = _data_category[_index_element];
+	_element_saved = true;
+	_data_saved = false;
+	_project_name = "Untitled";
+	fillChildren();
+	reload();
+	console.log("clickNewButton() executed")
+}
+
+function firstLoadFromWebSave()
+{
+	loadFileFromUrl("https://cdn.rawgit.com/RedMarbles/wuxia_documenter/991b0ab0/data/maya.json");
+	//loadFileFromUrl("https://www.dropbox.com/s/xt5wvad4sdcseyq/Book%20Eating%20Magician.json?dl=0")
+	console.log("File loaded")
+	console.log(_data_total[0].cat_name)
+	_index_category = 0;
+	_index_element = 0;
+	_data_category = _data_total[_index_category].cat_data;
 	_data_element = _data_category[_index_element];
 	_element_saved = true;
 	_data_saved = false;
