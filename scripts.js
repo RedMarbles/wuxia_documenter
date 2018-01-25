@@ -51,7 +51,7 @@ var _data_category = _data_total[_index_category].cat_data
 
 var _data_element = _data_category[_index_element]
 
-var _data_saved = false; // Records whether the entire dataset has been saved yet
+var _data_saved = true; // Records whether the entire dataset has been saved yet
 
 var _element_saved = true; // Records whether any changes have been made to the current element
 
@@ -777,6 +777,12 @@ function clickCollapseAllCollapses()
 
 function clickNewButton()
 {
+	if(!_data_saved)
+	{
+		var result = confirm("You have unsaved data. Are you sure you want to create a new file?")
+		if(!result) return;
+	}
+
 	_data_total = [
 		{
 			"cat_name" : "Category1",
@@ -822,7 +828,7 @@ function clickNewButton()
 	_data_category = _data_total[_index_category].cat_data;
 	_data_element = _data_category[_index_element];
 	_element_saved = true;
-	_data_saved = false;
+	_data_saved = true;
 	_project_name = "Untitled";
 	fillChildren();
 	reload();
