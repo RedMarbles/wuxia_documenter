@@ -1,0 +1,130 @@
+body
+{
+	background-color: #A0A0A0;
+	font-family: sans-serif;
+}
+
+select
+{
+	width: 100%;
+}
+
+
+#tabbar
+{
+	padding-top: 10px;
+}
+
+.my_list
+{
+	margin-top: 5px;
+	border: solid 1px gray;
+	border-radius: 10px;
+}
+
+li.heir_item
+{
+	white-space: nowrap;
+}
+
+a.heir_element
+{
+	padding-right: 5px;
+	padding-left: 5px;
+	border-radius: 3px;
+}
+
+.color-white
+{
+	background-color: #bababa;
+	color: black;
+}
+
+.color-pink
+{
+	background-color: #e678e8;
+	color: black;
+}
+
+.color-blue
+{
+	background-color: #64bbe0;
+	color: black;
+}
+
+.color-yellow
+{
+	background-color: #f2e394; /*#dae060;*/
+	color: black;
+}
+
+.color-green
+{
+	background-color: #63d886;
+	color: black;
+}
+
+.color-purple
+{
+	background-color: #a084b7;
+	color: black;
+}
+
+.color-orange
+{
+	background-color: #FF7043;
+	color: black;
+}
+
+.color-brown
+{
+	background-color: #c1946a;
+	color: black;
+}
+
+.color-black
+{
+	background-color: #3e4444;
+	color: white;
+}
+
+.form-group
+{
+	margin-bottom: 2px;
+}
+
+/*.padding10
+{
+	padding: 10px;
+}
+
+.tab
+{
+	border: solid 1px;
+	background-color: #707070;
+	padding-left: 10px;
+	padding-right: 10px;
+	padding-top: 5px;
+	padding-bottom: 5px;
+}
+
+.button_and_frame
+{
+	background-color: #A0A0A0;
+	padding: 5px;
+}
+
+#heirarchy-list
+{
+	margin-top: 20px;
+}
+
+.heir-item
+{
+	background-color: #909090;
+}
+
+.table
+{
+	margin-top: 10px;
+}*/

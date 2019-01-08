@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+	<meta charset="utf-8"/>
+	<meta name="viewport" content="width=device-width, initial-scale=1"/>
+	<!-- Bootstrap libraries -->
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"/>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script> 
+
+	<link rel="stylesheet" type="text/css" href="style.css"/>
+	<script type="text/javascript" src="scripts.js"></script>
+	<title> The Wuxia Documenter Project </title>
+</head>
+
+<body onLoad="clickNewButton()" onresize="resizeElements()">
+	
+	<div class="container" id="frame_root">
+		<div class="page-header">
+			<h2 id='title'> The Wuxia Documenter Project </h2>
+		</div>
+
+		<div class="row" id="div_chapter_select"> 
+			<div class="col-sm-6">
+				<button type="button" class="btn" onClick="clickNewButton()"> <span class="glyphicon glyphicon-file"></span> New </button>
+				<button type="button" class="btn" id="saveBtn" onClick="saveData()"> <span class="glyphicon glyphicon-save-file"></span> Save </button>
+				<span hidden> <input type="file" id="fileUploadSelect" onchange="loadFileAsText()"> </span>
+				<button type="button" class="btn" onClick="document.getElementById('fileUploadSelect').click()"> <span class="glyphicon glyphicon-open-file"></span> Load </button>
+				<!--input type="file" id="file-input" style="visibility:hidden"/-->
+			</div>
+			<div class="col-sm-3 text-right"> <h5> Chapter: </h5> </div>
+			<div class="col-sm-3"> 
+				<select id="select_chapter">
+					<option value="Chapter1"> Chapter 1 </option>
+				</select>
+			</div>
+		</div>
+
+		<!--div class="btn-group btn-group-sm" id="tabbar"> 
+			<button type="button" class="btn btn-primary"> Character </button>
+			<button type="button" class="btn btn-primary"> Character </button>
+			<button type="button" class="btn btn-primary"> Character </button>
+			<button type="button" class="btn btn-primary"> Character </button>
+		</div-->
+
+		<ul class="nav nav-tabs nav-justified" id="tabbar">
+			<li class="active"> <a href=#> Character </a> </li>
+			<li> <a href=#> Character </a> </li>
+			<li> <a href=#> Character </a> </li>
+			<li> <a href=#> Character </a> </li>
+			<li> <a href=#> Character </a> </li>
+		</ul>
+
+		<div class="row" id="frame_primary"> 
+			<div class="col-sm-6 padding10" id="frame_heirarchy_root"> 
+				<h3> Object Heirarchy </h3>
+				<button type="button" class="btn" onClick="clickAddObject()"> Add Object <span class="glyphicon glyphicon-plus"></span> </button>
+				<button type="button" class="btn" onClick="clickDelObject()"> Del Object <span class="glyphicon glyphicon-minus"></span> </button>
+				<span class="dropdown">
+					<button class="btn dropdown-toggle" type="button" id="categoryDropdownButton" data-toggle="dropdown"> 
+						Categories <span class="caret"> </span>
+					</button>
+					<ul class="dropdown-menu">
+						<li> <a class="dropdown-item" href="#" onClick="categoryAdd()"> New Category </a> </li>
+						<li> <a class="dropdown-item" href="#" onClick="categoryRename()"> Rename Category </a> </li>
+						<li> <a class="dropdown-item" href="#" onClick="categoryDelete()"> Delete Category </a> </li>
+					</ul>
+				</span>
+				<button type="button" class="btn" onClick="clickExpandAllCollapses()"> <span class="glyphicon glyphicon-plus"></span> </button>
+				<button type="button" class="btn" onClick="clickCollapseAllCollapses()"> <span class="glyphicon glyphicon-minus"></span> </button>
+				<br/>
+				<!--div class="list-group" id="heirarchy-list" style="overflow:auto; height:100%;">
+					<a href="#" class="list-group-item heir-item active"> Character 1 </a>
+					<a href="#" class="list-group-item heir-item"> Character 1 </a>
+					<a href="#" class="list-group-item heir-item"> Character 1 </a>
+					<a href="#" class="list-group-item heir-item"> Character 1 </a>
+					<a href="#" class="list-group-item heir-item"> Character 1 </a>
+				</div-->
+				<div class="my_list" id="heirarchy" style="overflow:auto; height:250px;">
+						<li> Character 1</li>
+						<li> Character 1 <ul>
+							<li> Character 2</li>
+							<li> Character 2</li>
+						</ul></li>
+						<li> Character 1</li>
+						<li> Character 1</li>
+						<li> Character 1 <ul>
+							<li> Character 2</li>
+							<li> Character 2</li>
+						</ul></li>
+						<li> Character 1</li>
+						<li> Character 1</li>
+						<li> Character 1 <ul>
+							<li> Character 2</li>
+							<li> Character 2</li>
+						</ul></li>
+						<li> Character 1</li>
+						<li> Character 1</li>
+					</ul>
+				</div>
+			</div>
+
+
+			<div class="col-sm-6 padding10" id="frame_description_root">
+				<h3> Object Description </h3>
+				<form class="form-horizontal" oninput="changeForm()">
+					<div class="form-group">
+						<button type="submit" class="btn" onClick="clickUpdate()"> Update <span class="glyphicon glyphicon-ok-circle"></span> </button>
+						<button type="submit" class="btn" onClick="clickRevert()"> Revert <span class="glyphicon glyphicon-remove-circle"></span> </button>
+					</div>
+					<div class="form-group">
+						<label class="control-label col-sm-2" for="object_name"> Name: </label>
+						<div class="col-sm-10">
+							<input type="text" class="form-control" id="object_name" placeholder="Object Name">
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="control-label col-sm-2" for="object_parents"> Parents: </label>
+						<div class="col-sm-10">
+							<input type="text" class="form-control" id="object_parents" placeholder="Object Parents">
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="control-label col-sm-2" for="select_color"> Color: </label>
+						<div class="col-sm-4">
+							<select id="select_color" class="form-control">
+								<option value="white" class="color-white"> White </option>
+								<option value="blue" class="color-blue"> Blue </option>
+								<option value="yellow" class="color-yellow"> Yellow </option>
+								<option value="green" class="color-green"> Green </option>
+								<option value="pink" class="color-pink"> Pink </option>
+								<option value="purple" class="color-purple"> Purple </option>
+								<option value="orange" class="color-orange"> Orange </option>
+								<option value="brown" class="color-brown"> Brown </option>
+								<option value="black" class="color-black"> Black </option>
+							</select>
+						</div>
+						<label class="control-label col-sm-2" for="object_index_number"> Index: </label>
+						<div class="col-sm-3"> 
+							<input type="number" class="form-control" id="object_index_number" placeholder="Element Index" min="0" max="1" step="1" value="1">
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="control-label" for="object_desc"> Description: </label>
+						<textarea class="form-control" id="object_desc" rows="9" placeholder="Description" style="overlow:auto; height:150px;"> </textarea>
+					</div>
+				</form>
+				<br/>
+			</div>
+
+		</div>
+	</div>
+
+</body>
+
+</html>
