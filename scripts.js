@@ -495,10 +495,10 @@ function resizeElements()
 {
 	var heir_list_element = document.getElementById('heirarchy');
 	var dynamic_height = $(window).height() - heir_list_element.getBoundingClientRect().top - 5;
-	heir_list_element.style.height = String( Math.max(dynamic_height,250) ) + "px";
+	heir_list_element.style.height = String( Math.min( Math.max(dynamic_height,250), $(window).height() - 10 ) ) + "px";
 	var desc_element = document.getElementById('object_desc')
 	dynamic_height = $(window).height() - desc_element.getBoundingClientRect().top - 5;
-	desc_element.style.height = String( Math.max(dynamic_height,150) ) + "px";
+	desc_element.style.height = String( Math.min( Math.max(dynamic_height,150), $(window).height() - 10 ) ) + "px";
 }
 
 // Only reloads the information about the current element without affecting the rest of the interface
